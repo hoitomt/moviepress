@@ -18,7 +18,18 @@ router.get('/', (req, res) => {
   .catch((err) => {
     console.log(err);
   });
+});
 
+router.get('/movies/:id', (req, res) => {
+  const movieUrl = `http://api.themoviedb.org/3/movie/${req.params.id}?api_key=${process.env.MOVIE_API_KEY}&language=en-US`;
+  axios.get(movieUrl)
+  .then((api_res) => {
+    console.log(api_res)
+    // res.send('test');
+    res.send(JSON.stringify(api_res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
 })
 
 module.exports = router;
