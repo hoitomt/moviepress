@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const models = require('../models');
 
 router.get('/sign-up', (req, res) => {
   res.render('application', {
@@ -10,8 +11,13 @@ router.get('/sign-up', (req, res) => {
 });
 
 router.post('/sign-up', (req, res) => {
-  console.log(req);
-  res.send(JSON.stringify(req.body));
+  models.User.create(req.body, {fields: ['username', 'email', 'password']})
+  .then((user) => {
+    res.send(JSON.stringify(req.body));
+  }).catch((error) => {
+    res.status(500);
+  })
+
 });
 
 module.exports = router;

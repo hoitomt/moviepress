@@ -7,7 +7,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./env.js');
 }
 
-app.use(bodyParser.urlencoded({ estended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.engine('html', es6Renderer);
