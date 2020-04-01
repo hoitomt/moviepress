@@ -28,6 +28,19 @@ router.get('/sign-up', (req, res) => {
       yield: 'views/users/sign-in.html'
     }
   })
+})
+.post('/sign-in', (req, res) =>  {
+  models.User.findOne({ where: { email: req.body.email }})
+  .then((user) => {
+    if (user && req.body.password === user.password) {
+      res.cookie('movie_press_token', user.id, {httpOnly: true, maxAge: 86400000});
+      res.redirect('/');
+    } else {
+      return res.status(401)
+    }
+  }).catch((error) => {
+    return res.status(500)
+  })
 });
 
 module.exports = router;
