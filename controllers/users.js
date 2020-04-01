@@ -21,6 +21,13 @@ router.get('/sign-up', (req, res) => {
 .get('/sign-out', (req, res) => {
   res.clearCookie('movie_press_token');
   res.redirect('/');
+})
+.get('/sign-in', (req, res) => {
+  res.render('application', {
+    partials: {
+      yield: 'views/users/sign-in.html'
+    }
+  })
 });
 
 module.exports = router;
