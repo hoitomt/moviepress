@@ -6,6 +6,9 @@ const auth = require('../helpers/auth.js');
 
 router.get('/sign-up', (req, res) => {
   res.render('application', {
+    locals: {
+      user: req.user
+    },
     partials: {
       yield: 'views/users/sign-up.html'
     }
@@ -29,6 +32,9 @@ router.get('/sign-up', (req, res) => {
 })
 .get('/sign-in', (req, res) => {
   res.render('application', {
+    locals: {
+      user: req.user
+    },
     partials: {
       yield: 'views/users/sign-in.html'
     }

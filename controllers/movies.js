@@ -8,6 +8,7 @@ router.get('/', (req, res) => {
   .then((api_res) => {
     res.render('application', {
       locals: {
+        user: req.user,
         movies: api_res.data
       },
       partials: {
@@ -26,6 +27,7 @@ router.get('/movies/:id', (req, res) => {
   .then((api_res) => {
     res.render('application', {
       locals: {
+        user: req.user,
         movie: api_res.data
       },
       partials: {

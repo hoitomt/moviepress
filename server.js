@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const es6Renderer = require('express-es6-template-engine');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const auth = require('./middleware/auth.js');
 
 if (process.env.NODE_ENV !== 'production') {
   require('./env.js');
@@ -9,6 +11,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(auth.checkCookie);
 
 app.engine('html', es6Renderer);
 app.set('views', 'views');
