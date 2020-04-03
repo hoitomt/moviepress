@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const models = require('../models');
+const bcrypt = require('bcryptjs');
+const auth = require('../helpers/auth.js');
 
 router.get('/sign-up', (req, res) => {
   res.render('application', {
@@ -10,12 +12,15 @@ router.get('/sign-up', (req, res) => {
   });
 })
 .post('/sign-up', (req, res) => {
+  console.log(req.body);
   models.User.create(req.body, {fields: ['username', 'email', 'password']})
   .then((user) => {
-    res.cookie('movie_press_token', user.id, { httpOnly: true, maxAge: 86400000});
+    const token = auth.generateToken(user);
+    res.cookie('movie_press_token', token, { httpOnly: true, maxAge: 86400000});
     res.redirect('/');
   }).catch((error) => {
-    res.status(500);
+    console.log(error);
+    return res.status(500);
   });
 })
 .get('/sign-out', (req, res) => {
@@ -32,12 +37,14 @@ router.get('/sign-up', (req, res) => {
 .post('/sign-in', (req, res) =>  {
   models.User.findOne({ where: { email: req.body.email }})
   .then((user) => {
-    if (user && req.body.password === user.password) {
-      res.cookie('movie_press_token', user.id, {httpOnly: true, maxAge: 86400000});
+    return bcrypt.compare(req.body.password, user.password)
+    .then((match) => {
+      const token = auth.generateToken(user);
+      res.cookie('movie_press_token', token, {httpOnly: true, maxAge: 86400000});
       res.redirect('/');
-    } else {
+    }).catch((error) => {
       return res.status(401)
-    }
+    })
   }).catch((error) => {
     return res.status(500)
   })
